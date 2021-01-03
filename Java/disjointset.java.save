@@ -1,0 +1,5 @@
+void connected(int[][] G){
+	int i,j;
+	for (i=0;i<G[0].length;i++){
+		for(j=0;j<G[0].length;j++){
+			makeset(

@@ -1,0 +1,141 @@
+\documentclass[10pt]{article}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\title{Puntos fijos de un sistema din\'amico de primer orden}
+\author{Mauricio Yamil Tame Soria}
+\maketitle
+
+\begin{abstract}
+Se determinan los puntos fijos y sus estabilidades para un sistema din\'amico particular. Tambi\'en se determina un valor donde se presenta 
+una bifurcaci\'on y se hace un diagrama.
+\end{abstract}
+
+\emph{Palabras clave: sistema din\'amico, puntos fijos, estabilidad, bifurcaci\'on}
+
+\section{Introducci\'on}
+Analizaremos un sistema $f(x)=\dot{x}$. La ecuaci\'on representa la relaci\'on que hay entre una variable (en este caso $x$) con su cambio en 
+el tiempo ($\dot{x}$). El an\'alisis ser\'a determinar los puntos fijos $x_f$ y 
+verificar el valor de $\frac{df}{dx}(x_f)$ para determinar su 
+estabilidad. La obtenci\'on de los puntos fijos se har\'a anal\'iticamente primero y despu\'es num\'ericamente utilizando el m\'etodo de 
+Newton Raphson. La ecuaci\'on del sistema es:
+
+\begin{equation}
+	\dot{x}=x+\frac{rx}{1+x^2}
+	\label{sistema}
+\end{equation}
+
+\section{Puntos fijos}
+Los puntos fijos $x_f$ cumplen $f(x_f)=0$, entonces para (\ref{sistema}) tenemos 
+$x_f+\frac{rx_f}{1+x_f^2}=0$. Al despejar $x_f$ obtenemos
+
+\begin{equation}
+	x_f(1-\frac{r}{1+x_f^2})=0	
+	\label{puntosfijos}
+\end{equation}
+
+esta ecuaci\'on se cumple si $x_f=0$ \'o si $(1-\frac{r}{1+x_f^2})=0$ por lo 
+tanto 
+$x_f=0$ siempre ser\'a punto fijo mientras que para el otro 
+factor debemos analizar la forma de los puntos fijos. Para el segundo factor si despejamos $x_f$ se obtiene
+
+\begin{equation}
+	x_f=\pm\sqrt{-r-1}
+	\label{factor}
+\end{equation}
+
+por lo tanto los puntos fijos son $x_f=0$ y (\ref{factor}), analizando el segundo observamos que $x_f$ tendr\'a valores reales s\'olo si 
+$-r-1\geq0$ lo que implica que $r\leq-1$ si $r=-1$ entonces $x_f=0$ es el \'unico punto fijo, si $r<-1$ los puntos fijos ser\'ian dos y 
+estar\'ian determinados por (\ref{factor}) por lo tanto podemos intuir que el punto $r_c$ donde ocurre la bifurcaci\'on es $r_c=-1$.
+
+\subsection{Estabilidad}
+Para determinar si los puntos fijos son estables o no, se construye un criterio de estabilidad mediante un analisis lineal. Si un punto fijo 
+es 
+estable 
+entonces al hacer 
+una leve perturbaci\'on sobre el punto fijo $x_f+\eta$ el sistema deber\'ia regresar al punto fijo $x_f$ conforme pasa el tiempo. Considerando 
+el punto $x=x_f + \eta$ que se encuentra cerca del punto fijo tenemos que su evoluci\'on en el tiempo ser\'a $\frac{dx}{dt}= \frac{dx_f}{dt} + 
+\frac{d\eta}{dt}$ que depende realmente de c\'omo evoluciona la perturbaci\'on $\eta$, por lo tanto $\dot{x}=\dot{\eta}=f(x)=f(x_f+\eta)$ 
+donde al hacer una expansi\'on en serie de Taylor obtenemos
+
+\begin{equation}
+	\dot{\eta}=f(x_f) + \eta f'(x_f) + O(\eta^2)
+	\label{cond3}
+\end{equation}
+
+despreciando los t\'erminos de orden $\eta^2$ (suponiendo una perturbaci\'on lo suficientemente leve) y tomando en cuenta que $f(x_f)=0$ nos 
+queda una ecuaci\'on 
+diferencial que nos revela c\'omo se 
+comporta la perturbaci\'on $\eta$.
+
+\begin{equation}
+	\dot{\eta} \approx \eta f'(x_f)
+	\label{cond4}
+\end{equation}
+
+de la cual la soluci\'on es 
+
+\begin{equation}
+	\eta=ke^{tf'(x_f)}
+	\label{cond5}
+\end{equation}
+
+De la soluci\'on podemos observar que si $f'(x_f)<0$ entonces la perturbaci\'on $\eta$ se har\'a cero al pasar el tiempo, lo que significa que 
+$x$ regresa a $x_f$ por lo tanto $x_f$ ser\'ia estable. Si $f'(x_f)=0$ entonces los t\'erminos $O(\eta^2)$ no son despreciables y se requiere 
+otro tipo de an\'alisis que en este caso ser\'a sobre la gr\'afica de $f(x)$ y si 
+$f'(x_f)>0$ la 
+perturbaci\'on crece por lo tanto $x_f$ ser\'ia inestable. Este es el criterio de estabilidad. Para nuestro sistema tenemos lo siguiente
+
+\begin{equation}
+	f'(x)=1+\frac{r(1-x^2)}{(1+x^2)^2}
+	\label{spline}
+\end{equation}
+
+entonces para el punto fijo $x_f=0$ tenemos que $f'(0)=1+r$ lo que implica que $x_f=0$ ser\'a estable si $r<-1$ e inestable si $r>-1$, para 
+cuando $r=-1$ basta observar la gr\'afica de $f(x)$ para determinar que $x_f=0$ 
+es inestable.  
+ser\'a inestable. Para los puntos fijos 
+determinados por la ecuaci\'on (\ref{factor}) evaluamos $f'(x_f)$ 
+obteniendo
+
+\begin{equation}
+	f'(x_f)=1+\frac{r(1+r+1)}{(1-r-1)^2}=1+\frac{r+2}{r}=2(1+\frac{1}{r})	
+	\label{est}
+\end{equation}
+
+como estos puntos fijos s\'olo existen si $r<-1$ entonces obtenemos que los puntos fijos obtenidos por (\ref{factor}) ser\'an 
+inestables si $\frac{1}{r}>-1$ lo que implica que $0<r<-1$ por lo tanto todos son inestables. Si $r=-1$ tenemos el punto $x_f=0$.
+
+\section{Diagrama $x_f$ vs $r$}
+El diagrama se obtiene haciendo una iteraci\'on sobre el par\'ametro $r$ donde en 
+cada paso se resuelve por los $x_f$ tales que $f(x_f)=0$, para resolver se 
+utiliza el m\'etodo para encontrar raices de Newton. Para la aproximaci\'on 
+inicial en el m\'etodo de Newton usamos el an\'alisis de los 
+puntos fijos, es decir, sabemos que son dos cuando $r<-1$ y sabemos que tienen la 
+forma de la ecuaci\'on (\ref{factor}) por lo tanto escogemos una 
+aproximaci\'on inicial $aprox=\sqrt{r}$, se escogi\'o esta porque sabemos que 
+est\'a cerca del punto fijo diferente de cero y est\'a tambi\'en lo suficiente 
+lejos de $x_f=0$ para no caer en ese punto. La ecuaci\'on (\ref{factor}) nos 
+indica que las raices son sim\'etricas por lo tanto tambi\'en buscamos la ra\'iz 
+cerca de $aprox=-\sqrt{r}$ para obtener el par de puntos fijos. Entonces una 
+iteraci\'on sobre $r$ desde $-5$ hasta $0$ con un paso de $0.1$ nos genera la 
+gr\'afica siguiente.
+ 
+\begin{figure}[h]
+\begin{center}
+	\input{diagrama.tex}
+\end{center}
+\end{figure}
+
+
+\begin{thebibliography}{9}
+\bibitem{chapra}
+	Stephen H. Strogatz,
+	\emph{Nonlinear dynamics and chaos}
+	Westview, 2th edition, 2015.
+\end{thebibliography}
+
+\end{document}

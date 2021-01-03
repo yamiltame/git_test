@@ -1,0 +1,38 @@
+#include<string>
+#include<iostream>
+#include<fstream>
+using namespace std;
+
+double T[]={550,575,600,625,647,670,690,725,750,775};
+
+void graficar(){
+	ofstream f;
+	f.open("graf.gp");
+	f<<"plot [0:5][0:5] ";
+	for(int i=0; i<10;i++){
+		f<<"(8*("<<T[i]<<"/647.0177))/(3*x - 1) - 3/x**2 title 'T="<<T[i]<<"',";}
+	f.close();
+	string cmd="gnuplot -p  ";
+	cmd=cmd+"graf.gp";
+	system(cmd.c_str());
+	}
+
+void cobweb(double N,double R,int k){
+	ofstream f;
+	string name="cobweb_"+to_string(R);
+	f.open(name.c_str());
+	for(int i=0;i<=k;i++){
+		f<<N<<" "<<N<<endl;
+		f<<N<<" "<<iteracionmapcua(N,R)<<endl;
+		N=iteracionmapcua(N,R);}
+	f.close();
+	f.open("cobweb.gp");
+	f<<"set title 'COBWEB PLOT R="<<R<<"'"<<endl;
+	f<<"plot [0:1][0:1] (x*x)+"<<R<<",x,"<<"'"<<name<<"'"<<"w lines";
+	f.close();
+	system("gnuplot -p cobweb.gp");
+	}
+ 	
+int main(){
+	graficar();	
+	}

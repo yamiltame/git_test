@@ -1,0 +1,105 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\title{M\'etodos num\'ericos para resolver sistemas de ecuaciones lineales}
+\author{Mauricio Yamil Tame Soria}
+\maketitle
+
+\begin{abstract}
+En el texto se exponen dos m\'etodos para resolver sistemas de ecuaciones lineales, la eliminaci\'on de inc\'ognitas de
+Gauss-Jordan y la descomposici\'on en factores LU. Se analizan algunas limitaciones y conflictos de los m\'etodos.
+\end{abstract}
+
+Palabras clave: eliminaci\'on Gauss-Jordan, Descomposici\'on LU
+
+\section{Introducci\'on}
+Eliminar inc\'ognitas consiste en sumar y restar las ecuaciones del sistema para reducirlo. La 
+forma en la que se 
+consigue es multiplicando las ecuaciones por 
+constantes de tal manera que al combinarlas se eliminen las inc\'ognitas y quede al menos una ecuaci\'on de una sola 
+inc\'ognita para 
+hacer sustituci\'on con ese valor y conocer las dem\'as inc\'ognitas. 
+
+\section{Eliminaci\'on de Gauss}
+Este m\'etodo se utiliza para resolver un sistema general de $n$ ecuaciones con $n$ inc\'ognitas. El m\'etodo consiste en hacer 
+una eliminaci\'on de inc\'ognitas sistem\'aticamente para obtener una matriz triangular superior y partiendo de ella calcular 
+las inc\'ognitas con una sustituci\'on apoyada del valor obtenido de la ecuaci\'on de una sola inc\'ognita. Para ello primero 
+hacemos la matriz aumentada con los coeficientes de las variables y los valores independientes de las ecuaciones, una vez que 
+tenemos la matriz aumentada lo que se hace es transformar la parte de los coeficientes de la matriz aumentada en una matriz 
+triangular superior, para poder transformar la matriz aumentada necesitamos evitar las divisiones por cero o las divisiones por 
+n\'umeros chicos al momento de normalizar la ecuaci\'on, es decir, convertir el coeficiente de la variable en 1, para 
+evitar estas situaciones lo que se utiliza es un 
+pivoteo parcial. El pivoteo parcial consiste en reacomodar las filas de la matriz aumentada para obtener el mayor coeficiente 
+posible que sirva como factor para la eliminaci\'on. Entonces primero se acomoda el sistema con un pivoteo parcial para obtener 
+el mayor n\'umero como factor divisor despu\'es a la fila siguiente se le suma la ecuaci\'on anterior multiplicada por un factor 
+tal que se elimine la inc\'ognita en la ecuaci\'on siguiente, por ejemplo en el sistema visto en clase
+
+\[ \left( \begin{array}{cccc}
+3 & -0.1 & -0.2 & 7.85 \\
+0.1 & 7 & -0.3 & -19.3 \\
+0.3 & -0.2 & 10 & 71.4 \end{array} \right) \]
+
+el primer paso de la eliminaci\'on ya est\'a, es el pivoteo, es decir el mayor n\'umero de la primera columna es el 3 y est\'a 
+arriba que es lo que necesitamos para calcular el factor $ m=\frac{A(2,1)}{A(1,1)}= \frac{-0.1}{3} $, es el factor por el cual 
+se multiplica la ecuaci\'on correspondiente a la fila 1 para sumarla a la ecuaci\'on correspondiente a la fila 2 para eliminar 
+la inc\'ognita 1 de la ecuaci\'on 2, de esta manera 
+iterando sobre las filas y columnas se obtiene la matriz triangular, en el c\'odigo se puede observar la sitematizaci\'on del 
+proceso. Una vez obtenida la matriz triangular se realiza la sustituci\'on hacia atr\'as para obtener los valores de las 
+inc\'ognitas. 
+\subsection{Gauss-Jordan}
+La eliminaci\'on de Gauss-Jordan consiste en hacer la elminicai\'on de Gauss y despu\'es seguir el proceso hasta obtener una 
+matriz diagonal, es decir, continuar eliminando inc\'ognitas hasta reducir el sistema a tres ecuaciones de una sola inc\'ognita, 
+por ejemplo, tomamos la matriz aumentada del sistema de ecuaciones lineales visto en clase despu\'es de haber realizado la 
+eliminaci\'on gaussiana
+
+\[ \left( \begin{array}{cccc}
+1 & -3.33E-2 & -6.66E-2 & 2.616 \\
+0.0 & 1 & -4.188E-2 & -2.793 \\
+0.0 & 0.0 & 1 & 7.0 \end{array} \right) \]
+
+si quisieramos eliminar la variable 2 de la primera ecuaci\'on podr\'iamos sumarle a la ecuaci\'on 1 la ecuaci\'on 2 
+multiplicada por el factor $m=3.333$ y de esta manera eliminar el valor de la segunda columna en la ecuaci\'on 1. Repitiendo el 
+proceso para la fila 1 y 2 con la ecuaci\'on 3 obtenemos la matriz 
+\[ \left( \begin{array}{cccc}
+1 & 0 & 0 & 3.000 \\
+0.0 & 1 & 0 & -2.500 \\
+0.0 & 0.0 & 1 & 7.000 \end{array} \right) \]
+de la cual obtenemos los valores de las inc\'ognitas.
+
+\section{Descomposici\'on LU}
+La descomposici\'on LU consiste en factorizar la matriz de coeficientes en una matriz triangular superior $U$ y una matriz 
+triangular inferior $L$ de tal manera que $LU=A$, donde A es la matriz de coeficientes, cumpliendo esta condici\'on se deduce a 
+partir de la ecuaci\'on 
+\begin{equation}
+	Ax=B
+\end{equation}
+ que 
+\begin{equation}
+	L \left( Ux - D \right) = Ax - B =0 
+\end {equation}
+por lo tanto $LU=A$ y $LD=B$ donde $x$ es el vector de soluciones y $B$ es el vector de valores independientes. Con esas 
+igualdades podemos obtener $D$ haciendo sustituci\'on hacia adelante y despues usar $D$ sobre la igualdad $Ux=D$ para obtener 
+$x$ con una sustituci\'on hacia atr\'as. Para hacer 
+la 
+descomposici\'on LU necesitamos hacer eliminaci\'on gaussiana sobre la matriz de coeficientes para obtener la matriz triangular 
+superior $U$ entonces U es la matriz que resulta de eliminaci\'on gaussiana sobre la matriz de coeficientes mientras que la 
+matriz triangular inferior $L$ se construye primero con una diagonal de unos y luego las entadas son los factores utilizados 
+para hacer las eliminaciones de inc\'ognitas, 
+en el ejemplo anterior 
+consideramos el factor $m=\frac{A(2,1)}{A(1,1)}= \frac{-0.1}{3} $ para eliminar la primera inc\'ognita de la ecuaci\'on 2, dicho 
+factor ser\'ia la entrada $l_{2,1}$ de la matriz triangular inferior $L$ y as\'i sistem\'aticamente, lo que nos garantiza esto 
+es que al hacer la multiplicaci\'on $LU$ se obtiene la matriz original pues la multiplicaci\'on de dichas matrices representa 
+las operaciones inversas de la triangulaci\'on de la matriz de coeficientes $A$.
+
+\begin{thebibliography}
+	\bibitem{chapra}
+	Stephen C. Chapra
+	\emph{M\'etodos num\'ericos para ingenieros}
+	Mc. Graw Hill, 5th edition, 2007.
+\end{thebibliography}
+
+\end{document}

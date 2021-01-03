@@ -1,0 +1,38 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\title{Errores de an\'alisis en los m\'etodos num\'ericos}
+\author{Mauricio Yamil Tame Soria}
+\maketitle
+
+\begin{abstract}
+Se exponen los errores que se presentan al momento de hacer an\'alisis 
+num\'ericos. El error que se obtiene almacenando la 
+informaci\'on en bits, error iterativo, error relativo y error absoluto.
+\end{abstract}
+
+Palabras clave: Error, an\'alisis num\'erico, punto flotante.
+
+\section{Introducci\'on}
+El error es la diferencia entre el valor obtenido por alg\'un m\'etodo o modelo y el valor real o esperado,es decir, qu\'e tanto se acerca 
+un valor predecido u obtenido al valor que esperamos o conocemos. Es un indicador de la precisi\'on que tiene el m\'etodo o modelo. Conocer 
+el comportaminto del error que tienen los m\'etodos y el almacenamiento de datos nos sirve para dar validez a los valores que se utilizan 
+como argumentos.
+
+\section{Error de almacenamiento}
+La informaci\'on que guardamos en la computadora no es como la abstraemos cotidianamente, se encuentra representada en cadenas de bits, un 
+bit es un valor de 0 \'o 1 que se almacena como un estado de apagado o encendido. Entonces dicho conjunto de estados nos puede representar 
+un n\'umero en un sistema binario o una letra en clave morse.
+\subsection{Punto flotante}
+Un n\'umero $N$ en punto flotante est\'a representado de la siguiente forma:
+
+\begin{equation}Â
+	N=m \times b^e \hspace{1cm} \frac{1}{b} \leq m \leq 1
+	\label{flotante}
+\end{equation}
+
+\end{document}

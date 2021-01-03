@@ -1,0 +1,97 @@
+//TAREA 2 COLAS DE PRIORIDAD
+//MAURICIO YAMIL TAME SORIA
+
+//------------------JUGADOR---------------
+
+
+class jugador{
+	String Nom; int Pts;
+
+jugador(String n, int p){
+	Nom=n; Pts=p;}
+
+int puntos(){
+	return Pts;}
+
+String imprimir(){
+	String a=Nom+" = "+Pts;
+	return a;}
+}//FIN
+
+//------------PUNTUACIONES----------------------------------------------------
+
+
+class puntuaciones{
+	int i,j;
+	jugador[] M;
+	jugador t;
+
+puntuaciones(int n){
+	M=new jugador[n];
+	i=0;}
+
+void evaluar(){
+	for(j=i;j>0;j--){
+			if(M[j].puntos()>M[j-1].puntos()){
+				t=M[j-1]; M[j-1]=M[j]; M[j]=t;}
+		else{break;}}}
+
+void borrar(int b){
+	for(j=b-1;j<i;j++){
+		M[j]=M[j+1]; M[j+1]=null;}}
+
+void ver(){
+	for(j=0;j<M.length;j++){
+		if(M[j]==null){ System.out.println( (j+1)+".     = 0");}
+		else{ System.out.println((j+1)+"."+M[j].imprimir());}}}
+
+void insertar(jugador a){
+	if(i==M.length-1){if(M[M.length-1]==null){ 
+				M[i]=a; evaluar();}
+			else{ if(a.puntos()>M[M.length-1].puntos()){
+				M[i]=a; evaluar();}
+				else{}}}
+	else{M[i]=a; evaluar(); i++;}}
+}//FIN
+
+
+//--------------------------APLICACION-----------------------------
+
+
+import java.util.Scanner;
+class aplicacion{
+	static puntuaciones l;
+	static Scanner r= new Scanner(System.in);
+	static int e,p,n,k;
+	static String nom;
+
+public static void main(String[]args){
+	menu();}
+
+static void menu(){
+	System.out.println("Cuántas puntuaciones deseas albergar?");
+	n=r.nextInt();
+	l=new puntuaciones(n);
+	for(;;){
+		System.out.println("1. Insertar jugador   2. Borrar puntuación   3. Ver puntuaciones   4. Salir");
+		e=r.nextInt();
+		switch (e){
+			case 1: System.out.println("Ingresa el nombre");
+				nom=r.next();
+				System.out.println("Ingresa el puntaje");
+				p=r.nextInt();
+				l.insertar(Ins(nom, p));
+				break;
+			case 2: System.out.println("Qué número de jugador deseas borrar?");
+				k=r.nextInt();
+				if(k>n && k<1){System.out.println("número de jugador inválido");}
+				else{l.borrar(k);}
+				break;
+			case 3: l.ver(); break;
+			case 4: System.exit(0);
+			}}
+	}
+
+static jugador Ins(String n, int p){
+	jugador a=new jugador(n,p); return a;}
+}//FIN

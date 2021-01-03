@@ -1,0 +1,133 @@
+\documentclass[10pt]{article}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+
+\begin{document}
+\title{Espectro de Lyapunov para el modelo hyper-ca\'otico de 
+Rossler}
+\author{Mauricio Yamil Tame Soria}
+\maketitle
+
+\begin{abstract}
+Obtendremos el espectro de Lyapunov para el modelo de Rossler en 
+lugares cercanos a sus puntos fijos utilizando el m\'etodo estandar 
+descrito en el art\'iculo que nos envi\'o.
+\end{abstract}
+
+\emph{Palabras clave: Exponentes Lyapunov, Rossler, hypercaos}
+
+\section{Introducci\'on}
+Los exponentes de Lyapunov son un indicador de qu\'e tanto 
+difieren trayectorias que iniciaron en puntos muy cercanos, es 
+decir, nos indican que tan sensible es el sistema a las 
+condiciones iniciales.
+Los sistemas hyperca\'oticos tienen varios exponentes de lyapunov 
+que son positivos.
+El modelo de Rossler es un sistema de cuatro dimensiones que es 
+hyperca\'otico.
+ 
+
+\section{Sobre el sistema}
+Las ecuaciones del modelo de Rossler son las siguientes:
+
+\begin{eqnarray} 
+	\dot{z_1}=-(z_2 + z_3) \\
+	\dot{z_2}=z_1 + az_2 + z_4 \\
+	\dot{z_3}=b + z_1 z_3 \\
+	\dot{z_4}=cz_4 - dz_3
+\end{eqnarray}
+
+En este caso los parametros $a,b,c,d$ son $0.25,3.0,0.05,0.5$ 
+respectivamente. El an\'alisis de los exponentes de lyapunov nos 
+interesa cerca de los puntos fijos, entonces debemos calcularlos. 
+Los puntos fijos cumplen que 
+$\dot{z_1}=\dot{z_2}=\dot{z_3}=\dot{z_4}=0$, entonces tenemos que 
+los puntos fijos $\tilde{z_1}, \tilde{z_4}, \tilde{z_4}, 
+\tilde{z_4}$ cumplen lo siguiente
+
+\begin{eqnarray} 
+	0=-(\tilde{z_2} + \tilde{z_3}) \\
+	0=\tilde{z_1} + a\tilde{z_2} + \tilde{z_4} \\
+	0=b + \tilde{z_1} \tilde{z_3} \\
+	0=c\tilde{z_4} - d\tilde{z_3}
+\end{eqnarray}
+
+Resolviendo por sustituci\'on obtenemos lo siguiente
+
+\begin{eqnarray} 
+	\tilde{z_2} = -\tilde{z_3} \\
+	\tilde{z_1} = \tilde{z_3} (a-\frac{d}{c}) \\
+	\tilde{z_4} = \frac{d}{c} \tilde{z_3} \\
+	\tilde{z_3} = \pm \sqrt{\frac{b}{\frac{d}{c} - a}}
+\end{eqnarray}
+
+Resolviendo obtenemos dos puntos, (-5.4083,-0.5547,0.5547,5.5470) 
+y (5.4083,0.5547,-0.5547,-5.5470) los cuales usaremos como orientaci\'on para determinar las condiciones 
+iniciales.
+
+\section{Resultados}
+
+Para el primer punto fijo considerando el orden anterior usamos la condici\'on 
+incial (-5.5083, -0.6574, 0.6547, 5.6470) y corremos el tiempo de $t=0$ a $t=4$ con un paso 
+$\Delta 
+t=0.002$ sobre el sistema din\'amico usando RK4. Las 4 dimensiones dificultan la visualizaci\'on, 
+por eso se sobreponen las gr\'aficas de cada variable respecto al tiempo. Para el c\'alculo del 
+espectro usamos el punto inicial antes del ciclo transitorio, pues si usamos el punto que nos 
+devuelve el ciclo transitorio el programa regresa un resultado nan(not a number) que se refiere al 
+infinito,es decir, el sistema diverge rapid\'isimo cuando est\'a lejos de los puntos fijos. Las 
+gr\'aficas de la evoluci\'on del sistema en cada variable son
+
+\begin{figure}[H]
+    \centering
+    \input{grafica1.tex}
+    \caption{Evolucion de las variables $z_1 , z_2 , z_3 , z_4$ de $0$ a $4$ desde el punto 
+			inicial $(-5.508, -0.654, 0.654, 5.647)$}
+\end{figure}
+
+Para el segundo punto fijo usamos la condicion inicial $(5.4083,0.5547, 
+-0.5547,-5.5470)$ que es el mismo punto fijo, a pesar de ser el punto fijo 
+el error de almacenamiento es suficiente para hacer que el sistema se vaya al infinito si hacemos 
+la transici\'on de $0$ a $4$, por eso el paso transitorio s\'olo se hace 700 veces que son 
+suficientes para apreciar c\'omo diverge el sistema. 
+
+\begin{figure}[H]
+    \centering
+    \input{grafica2.tex}
+    \caption{Evolucion de las variables $z_1 , z_2 , z_3 , z_4$ de $0$ a $1.4$ desde el punto 
+			inicial $(5.4083, 0.5547,-0.5547,-5.5470)$}
+\end{figure}
+
+Las gr\'aficas obtenidas para el espectro de Lyapunov son las siguientes
+
+\begin{figure}[H]
+    \centering
+    \input{exponentes1.tex}
+    \caption{Espectro de Lyapunov en el primer punto fijo}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \input{exponentes2.tex}
+    \caption{Espectro de Lyapunov en el segundo punto fijo}
+\end{figure}
+
+\section{Conclusiones}
+El Modelo hyperca\'otico de Rossler tiene un comportamiento bastante raro, haciendo varias pruebas 
+con puntos que distaban una unidad del primer punto fijo se obtienen resultados de nan para 
+los 
+exponentes y valores muy diferentes para la evoluci\'on de las variables mientras que para el 
+segundo punto punto fijo casi cualquier valor diferente del punto fijo arroja resultados que 
+afirman que el sistema diverge r\'apidamente cuando se inicia lejos del punto fijo. 
+
+ 
+\begin{thebibliography}{9}
+\bibitem{tesis}
+K. Ramasubramanian, M.S. Sriram
+	\emph{A comparative study of computation of Lyapunov spectra with different algorithms}
+Department of Theoretical Physics, University of Madras, Guindy Campus, Chennai 600 025, India
+\end{thebibliography}
+
+\end{document}

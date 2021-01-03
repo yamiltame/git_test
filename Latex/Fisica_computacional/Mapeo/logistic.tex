@@ -1,0 +1,49 @@
+\documentclass[9pt]{article}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{epsfig}
+\usepackage{graphicx,wrapfig,lipsum}
+\begin{document}
+\title{Mapeo log\'istico con raz\'on de crecimiento parab\'olica}
+\author{Mauricio Yamil Tame Soria}	
+\maketitle
+	
+El mapeo log\'istico es un modelo matem\'atico que describe la din\'amica de poblaciones. $N_n$ es el n\'umero de individuos en la 
+generaci\'on $n$, $r$ es la raz\'on de crecimiento de la poblaci\'on. El n\'umero de individuos en la generaci\'on $n+1$ ser\'a 
+
+\begin{equation}
+N_{n+1}=rN_n
+\label{name}
+\end{equation}
+	
+Si consideramos que el par\'ametro $r$ se comporta como una par\'abola que depende de la poblaci\'on 
+de la siguiente forma
+
+\begin{figure}[h!]
+\begin{center}
+	\input{R.tex}
+\end{center}
+\end {figure}	
+
+\begin{equation}
+r(N_n)=R-\frac{N_n^2}{N_m^2}R=R(1-\frac{N_n^2}{N_m^2})
+\label{name2}
+\end{equation} 
+
+donde $N_m$ es la poblaci\'on m\'axima que alcanza la especie que se est\'a modelando 
+y $R$ es una constante, sustituyendo (\ref{name2}) en (\ref{name}) se obtiene
+	
+\begin{equation}
+N_{n+1}=R(1-\frac{N_n^2}{N_m^2})N_n
+\label{name3}
+\end{equation}
+	
+La versi\'on normalizada del modelo se obtiene introduciendo la variable $x_n=\frac{N_n}{N_m}$ en la
+ecuaci\'on (\ref{name3}).
+	
+\begin{equation}
+x_{n+1}=Rx_n(1-x_n^2) \hspace{1cm} 0\leq x_n\leq1
+\label{name4}
+\end{equation}
+	
+\end{document}

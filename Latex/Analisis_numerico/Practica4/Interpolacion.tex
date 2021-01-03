@@ -1,0 +1,257 @@
+\documentclass[10pt,twocolumn]{article}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\title{Interpolaci\'on}
+\author{Mauricio Yamil Tame Soria}
+\maketitle
+
+\begin{abstract}
+Se describen m\'etodos de interpolaci\'on para un conjunto de puntos y se utilizan para hacer una 
+interpolaci\'on con 8 valores que corresponden a una funci\'on conocida. Los m\'etodos para una 
+variable son:   
+Interpolaci\'on polinomial de Newton en diferencias divididas, polinomio 
+de Lagrange y la interpolaci\'on con trazadores c\'ubicos.
+\end{abstract}
+
+\emph{Palabras clave: Interpolaci\'on, Newton, diferencias divididas, 
+Lagrange, splines, interpolaci\'on 2D.}
+
+\section{Introducci\'on}
+Se explicar\'a brevemente en lo que consisten los m\'etodos para ponerlos en pr\'actica con un ejemplo.
+Los datos que utilizaremos para probar los m\'etodos son 8 puntos que corresponden a la funci\'on 
+logaritmo natural. Con los 8 puntos obtendremos el polinomio de Interpolaci\'on de $7$ grado. Mediante 
+un programa en Fortran se calculan los coeficientes para el polinomio con ambos m\'etodos, el de Lagrange 
+y el 
+de 
+Newton; despu\'es de obtener el polinomio estimamos el valor en 2, es decir, evaluamos $f(2)$ y lo 
+comparamos con el valor conocido de $ln(2)$ para analizar el error en la estimaci\'on del polinomio.  
+
+\section{Interpolaci\'on polinomial}
+La interpolaci\'on polinomial es un m\'etodo que nos ayuda a estimar un valor partiendo de unos que ya 
+conocemos. Dicha estimaci\'on se calcula con un polinomio $f(x)= \sum_{i=0}^{n-1} a_ix^{i}$ donde $n$ es 
+el 
+n\'umero de puntos que tenemos, los cuales son de la forma $(x,y)$. El m\'etodo de Newton calcula los 
+coeficientes de $f(x)$, el m\'etodo de Lagrange construye el polinomio de tal 
+manera que satisfaga $f(x_i)=y_i$, con los trazadores c\'ubicos se hace una interpolaci\'on en trozos(con 
+pares de puntos).
+Por ejemplo 
+para dos puntos usamos un 
+polinomio $f(x)=a_0 + a_1x$ que tiene la forma de una recta, el coeficiente $a_0$ es el 
+primer valor 
+$y_1$ y el coeficiente $a_1$ es la pendiente de la recta entonces $a_1=\frac{y_2-y_1}{x_2-x_1}$. Para un 
+conjunto de $n$ puntos obtenemos un polinomio de grando $n-1$.
+
+\subsection{Polinomio de Lagrange} 
+El polinomio de Lagrange se construye con la intuici\'on de que el polinomio evaluado en $x_1$ debe ser 
+$y_1$. Para un conjunto de $n+1$ puntos numerados $(x_0,y_0),...,(x_n,y_n)$ se formula el polinomio 
+$f_n(x)=\sum_{i=0}^{n}L_i(x)y_i$ de tal manera que $f_n(x_i)=y_i$ eso 
+implica que $L_i(x_j)=\delta_{ij}$, En este polinomio los valores $y_i$ actuan como coeficientes mientras 
+que los $L_i(x)$ son polinomios de grado i, entonces $f_n$ es una suma de polinomios. para cumplir estas 
+condiciones se construye 
+el polinomio 
+de la 
+siguiente forma
+
+\begin{equation}
+	f_n(x)=\sum_{i=0}^{n}L_i(x)y_1
+	\label{polf}
+\end{equation}
+
+\begin{equation}
+	L_i(x)=\prod_{j=0}^{n}\frac{x-x_j}{x_i-x_j} \hspace{1cm} j\neq i
+	\label{Lpol}
+\end{equation}
+
+Esta construcci\'on nos asegura que $f_n(x_i)=y_i$	
+
+\subsection{Diferencias Divididas}
+Para un conjunto de $n+1$ puntos numerados de 0 a $n$ el m\'etodo de Newton ofrece una sistematizaci\'on 
+para obtener los coeficientes $a_i$ mediante un 
+planteamiento de que $f$ tiene la forma de $f(x)=\sum_{i=0}^{n}b_i\prod_{j=0}^{i-1}(x-x_j)$, 
+desarrollando 
+los productos y reagrupando los t\'erminos reescribimos $f$ de la forma $f(x)=\sum_{i=0}^{n}a_ix^{i} $ lo 
+que nos da un conjunto de ecuaciones $a_i=a_i(b_0,...,b_n)$, es decir, los coeficientes en t\'erminos 
+de las $b_i$ las cuales se calculan partiendo de la condici\'on 
+$f(x_i)=\sum_{j=0}^{i}b_i\prod_{k=0}^{j-1}(x-x_k)=y_i$. El m\'etodo de Newton proporciona una forma 
+recursiva para obtener los $b_i$ de la siguiente forma, $b_0=y_0$, $b_i=d[x_i,...,x_0]$ y se define 
+$d[x_i,...,x_0]$ como la diferencia dividia entre $x_i$ y $x_0$ y se calcula de la manera siguiente.
+
+\begin{equation}
+	d[x_i,x_{i-1}]=\frac{y_i-y_{i-1}}{x_i-x_{i-1}} \hspace{1cm}
+	\label{dif}
+\end{equation}
+
+y la regla recursiva
+
+\begin{equation}
+	d[x_k,...,x_0]=\frac{d[x_k,...,x_1]-d[x_{k-1},...,x_0]}{x_k-x_0}
+	\label{dif2}
+\end{equation}
+
+de esta forma se obtiene el polinomio de interpolaci\'on para los $n+1$ sustituyendo los $b_i$ lo que 
+resulta en
+\begin{equation} 	
+	f_n(x)=y_0+\sum_{i=1}^{n}d[x_i,...,x_0]\prod_{j=0}^{i-1}(x-x_i)
+	\label{newton}
+\end{equation}
+
+\subsection{Error de interpolaci\'on}
+Para calcular el error de la estimaci\'on con el polinomio de Newton se observa que la ecuaci\'on 
+(\ref{newton}) se parece a la serie de Taylor. Para calcular el error de truncamiento de Taylor se 
+necesita la derivada de orden $(n+1)$ para calcular el error del polinomio se utiliza una diferencia 
+dividida para aproximar dicha derivada, pero para eso ocupamos un punto extra, es decir, para calcular el 
+error con $n$ puntos necesitamos tener $n+1$ puntos. Usando esa aproximaci\'on resulta que el error para 
+la estimaci\'on con el valor $x$ es 
+
+\begin{equation}
+	E_n \approx d[x_{n+1},...,x_0]\prod_{i=0}^{n}(x-x_i)
+	\label{mistake}
+\end{equation}
+
+Esta forma de calcular el error tambi\'es es v\'alida para el polinomio de Newton ya que los dos 
+m\'etodos regresan el mismo polinomio, el \'unico polinomio de grado $n-1$ que pasa por los $n$ puntos. 
+La diferencia que existe en los valores que devuelve un m\'etodo y el otro se debe al error de 
+truncamiento que se comete al momento de almacenar y operar los datos en forma de bytes.
+
+\subsection{Metodolog\'ia y resultados}
+Se utilizan 8 puntos para hacer la interpolaci\'on, la tabla de valores es:
+
+\begin{tabular}[h]{|l|l|}
+	\hline
+	x & y=$ln(x)$ \\ \hline
+	1 & 0 \\
+	4 & 1.3862944 \\
+	6 & 1.7917595 \\
+	5 & 1.6094379 \\
+	3 & 1.0986123 \\
+	1.5 & 0.4054641 \\
+	2.5 & 0.9162907 \\
+	3.5 & 1.2527630 \\ \hline
+\end{tabular}
+
+para el c\'alculo de las diferencias divididas se utiliza una matriz de $2n-1 \times n+1$ que se llena as\'i
+\begin{tabular}[b]{|l|l|l|l}
+	\hline
+	$x_0$ & $y_0$ & 00 & $...$ \\
+	00 & 00 & $d[x_0,x_1]$ & $...$ \\
+	$x_1$ & $y_1$ & 00 & $d[x_2,x_1,x_0]$ \\
+	00 & 00 & $d[x_2,x_1]$ & $...$ \\
+	$x_2$ & $y_2$ & 00 & $d[x_3,x_2,x_1]$ \\
+	$...$ & $...$ & $...$ & $...$ \\ \hline
+\end{tabular}
+
+entonces para los puntos de la tabla de valores calculamos el valor estimado para 2 usando el 
+programa en Fortran codificado en clase para obtener el Cuadro 1 que representa los resultados obtenidos, los resultados fueron truncados hasta 7 
+deimales para facilitar la visualizaci\'on, los valores con la presici\'on completa se obtienen ejecutando el c\'odigo. Analizando 
+el cuadro 1 podemos observar que en 
+general el error estimado disminuye a medida que se incrementa el n\'umero de puntos, para los errores absolutos podemos observar lo mismo pero esto se 
+debe a que los puntos que interpolamos corresponden a la funci\'on que conocemos.
+
+ 
+
+\begin{table*}[t]
+	\centering
+	\begin{tabular}{|l|l|l|l|l|l|}
+		\hline
+		puntos & Newton & Lagrange & Error Newton & Error Lagrange & Error estimado \\
+		\hline
+		1 & 0 & 0 & 0 & 0 & 0.4620981 \\ \hline
+		2 & 0.4620981  & 0.4620981 & 0.231049 & 0.2310490 & 0.10374623 \\ \hline
+		3 &0.56584436 &0.56584436  &0.12730281 &0.12730281 & 6.29243333E-002 \\ \hline
+		4 & 0.62876867 & 0.6287687 & 6.43784805E-002& 6.43784805E-002 & 4.69531E-002 \\ \hline
+		5 & 0.6757218 & 0.6757218& 1.74253805E-002 & 1.74253805E-002 & 2.17914927E-002 \\ \hline
+		6 & 0.69751329 &0.69751329 &-4.36611213E-003 &-4.36611213E-003 &-3.61604254E-003 \\ \hline
+		7 & 0.69389725 & 0.69389725 &-7.50069598E-004 &-7.50069598E-004 &-4.58899682E-004 \\ \hline
+		8 & 0.69343835 & 0.69343835 &-2.91169912E-004 &-2.91169916E-004 & 000 \\ \hline
+	\end{tabular}
+	\caption{Resultados}
+\end{table*}
+
+\section{Trazadores c\'ubicos}
+Interpolar los $n+1$ puntos nos devuelve un polinomio de grado $n$, sin embargo existen casos donde los polinomios devuelven resultados err\'oneos 
+devido a errores de redondeo y la lejan\'ia entre los puntos. El m\'etodo de los trazadores c\'ubicos consiste en hacer polinomios de grado menor en 
+subconjuntos de los datos, los polinomios son lo que llamamos trazadores. Los trazadores se vuelven m\'as precisos cuando la funci\'on es suave pero 
+de repente cambia muy r\'apido, por lo tanto si la funci\'on tiene cambios locales e intensos ser\'a conveniente usar el m\'etodo de los trazadores. En 
+este texto se expone el m\'etodo usando polinomios de grado 3 para la interpolaci\'on de los subconjuntos de puntos. Necesitamos un conjunto de 
+polinomios de la forma $f_i(x)=a_ix^3 + b_ix^2 + c_ix + d_i$ donde el \'indice $i$ corresponde al n\'umero de intervalo, por ejemplo el polinomio 
+$f_1(x)$ es el trazador asignado al intervalo del punto $(x_0,y_0)$ al punto $(x_1,y_1)$ entonces para $n+1$ puntos numerados $(x_0,...,x_n)$ existen 
+$n$ 
+intervalos y 
+para 
+cada 
+intervalo un polinomio con 4 inc\'ognitas $a_i,b_i,c_i,d_i$ lo que nos resulta en $4n$ inc\'ognitas por lo que necesitamos $4n$ ecuaciones. Dichas 
+ecuaciones se obtienen fijando condiciones las cuales son:
+
+\begin{equation}
+	f_i(x_i)=f_{i+1}(x_i)=y_i \hspace{1cm} i=1,...,n-1
+\label{cond1}
+\end{equation}
+
+\begin{equation}
+	f_1(x_0)=y_0 , f_n(x_n)=y_n
+\label{cond2}
+\end{equation}
+
+\begin{equation}
+	f_i'(x_i)=f_{i+1}'(x_i) \hspace{1cm} i=1,...,n-1
+\label{cond3}
+\end{equation}
+
+\begin{equation}
+	f_i''(x_i)=f_{i+1}''(x_i) \hspace{1cm} i=1,...,n-1
+\label{cond4}
+\end{equation}
+
+\begin{equation}
+	f_1''(x_1)=0 , f_n''(x_n)=0
+\label{cond5}
+\end{equation}
+
+la condici\'on (\ref{cond1}) determina $2(n-1)$ ecuaciones, la condicion (\ref{cond2}) igual que la (\ref{cond5}) determinan 2 ecuaciones, la 
+condici\'on
+(\ref{cond3}) igual que la 
+(\ref{cond4}) determinan $n-1$ ecuaciones, por lo tanto tenemos $2n-2 + 2 + n-1 + n-1 + 2 = 4n$ ecuaciones. Resolviendo el sistema de ecuaciones para 
+obtener los coeficientes $a_i,b_i,c_i,d_i$ podemos construir los trazadores $f_i(x)$. Pero existe una alternativa m\'as eficiente que s\'olo requiere 
+resolver $n-1$ ecuaciones. Para este m\'etodo observamos que la segunda derivada de cada $f_i(x)$ es una l\'inea recta entonces al derivar el polinomio
+$f_i(x)=a_ix^3 + b_ix^2 + c_ix + d_i$ obtenemos 
+
+\begin{equation}
+	f_i''(x)=f_i''(x_{i-1})\frac{x-x_i}{x_{i-1}-x_i} + f_i''(x_i)\frac{x-x_{i-1}}{x_i-x_{i-1}}
+	\label{spline}
+\end{equation}
+
+esta ecuaci\'on calcula la segunda derivada en el intervalo $i$ partiendo del conocimiento que es una recta que interpola $(x_{i-1},f_i''(x_{i-1}))$ y 
+$(x_i,f_i''(x_i))$. Al integrar (\ref{spline}) dos veces obtenemos 
+
+\begin{equation}
+	f_i(x)=\frac{(x-x_1)^3f_i''(x_{i-1})}{6(x_{i-1}-x_i)}+\frac{(x-x_i)^3f_i''(x_i)}{6(x_i-x_{i-1})}+bx+c
+	\label{int}
+\end{equation}
+ donde b y c son constantes de integraci\'on que obtenemos de las condiciones de igualdad de las funciones, es decir, $f_i(x_i)=y_i$ y 
+$f_i(x_{i-1})=y_{i-1}$ entonces con esas condiciones despejamos por $b$ y por $c$ obteniendo la expresi\'on 
+
+\begin{multline}
+	f_i(x)=\frac{(x-x_1)^3f_i''(x_{i-1})}{6(x_{i-1}-x_i)}+\frac{(x-x_i)^3f_i''(x_i)}{6(x_i-x_{i-1})} \\
+	+[\frac{y_{i-1}}{x_i-x_{i-1}} - \frac{f_i''(x_{i-1})(x_i-x_{i-1})}{6}](x_i-x) \\
+	+[\frac{y_i}{x_i-x_{i-1}}-\frac{f_i''(x_i)(x_i-x_{i-1})}{6}](x-x_{i-1})
+\end{multline}
+
+Para esta ecuaci\'on s\'olo quedan dos valores desconocidos, $f_i''(x_{i-1})$ y $f_i''(x_i)$; las segundas derivadas se eval\'uan con la condici\'on de 
+que las primeras derivadas son continuas, es decir, $f_i'(x_i)=f_{i-1}'(x_i)$, entonces derivamos la ecuaci\'on de $f_i(x)$ para meter la condici\'on y 
+de 
+esta manera 
+obtenemos para todas las $f_i$ , $n-1$ ecuaciones con $n+1$ segundas derivadas desconocidas pero sabemos que en los extremos son cero, entonces sólo 
+quedan $n-1$ segundas derivadas por encontrar que se hace resolviendo el sistema de $n-1$ ecuaciones con $n-1$ inc\'ognitas.
+
+\begin{thebibliography}{9}
+\bibitem{chapra}
+	Stephen C. Chapra,
+	\emph{M\'etodos num\'ericos para ingenieros}
+	Mc. Graw Hill, 5th edition, 2007.
+\end{thebibliography}
+
+\end{document}

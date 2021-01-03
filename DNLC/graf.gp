@@ -1,0 +1,1 @@
+plot [][0:1]'mapeo_0' w p pt 5 ps 0.8,

@@ -1,0 +1,140 @@
+\documentclass[10pt]{article}
+\usepackage{graphicx}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\begin{document}
+\title{M\'etodo del disparo para resolver una ecuaci\'on diferencial de 
+segundo orden con condiciones de frontera}
+\author{Mauricio Yamil Tame Soria}
+\maketitle
+
+\begin{abstract}
+Resolvemos num\'ericamente una ecuaci\'on utilizando el m\'etodo del 
+disparo con la aproximaci\'on de Newton
+\end{abstract}
+
+\emph{Palabras clave: Disparo, condiciones de frontera, edo segundo orden}
+
+\section{Introducci\'on}
+Tenemos una ecuaci\'on $y''=f(x,y,y')$ con condiciones de frontera $y(a)=\alpha$ y $y(b)=\beta$, 
+utilizando el m\'etodo del disparo obtendremos una 
+soluci\'on num\'erica, la cual graficaremos. Tambi\'en compararemos nuestras soluciones con la soluci\'on exacta y lo haremos con distintas 
+resoluciones para el RungeKutta y distintas tolerancias para la condici\'on de frontera. Nuestra ecuaci\'on es la siguiente.
+ 
+\begin{equation}
+	y''=2y^3-6y-2x^3 \hspace{0.5cm} 1 \leq x \leq 2 \hspace{0.5cm} y(1)=2 \hspace{0.25cm} y(2)=5/2
+\label{sistema}
+\end{equation}
+
+\section{Planteamiento del Disparo}
+Primero necesitamos pasar nuestro problema de valores de frontera a un problema de valor inicial. Para esto proponemos el siguiente sistema
+
+\begin{equation}
+	y'=z \hspace{0.5cm} z'=2y^3-6y-2x^3	\hspace{0.5cm} 1 \leq x \leq 2 \hspace{0.5cm} y(1)=2 \hspace{0.25cm} y'(1)=t
+\label{sistema1}
+\end{equation}
+
+el sistema representa un problema de valores iniciales. Resolviendo el sistema obtenemos una soluci\'on que tiene un cierto valor en la frontera, es 
+decir $y(b)$ tiene un valor que depende del par\'ametro $t$ entonces realmente nuestra soluci\'on es una funci\'on $y(x,t)$ y necesitamos un $t$ tal 
+que $y(b,t)=5/2$ que es nuestra condici\'on de frontera, esta condici\'on nos da otra ecuaci\'on 
+
+\begin{equation}
+	y(b,t)-5/2=0
+\label{newton}
+\end{equation}
+
+la cual resolveremos usando el m\'etodo para encontrar ra\'ices de Newton, entonces necesitamos resolver por $\frac{\partial y(b,t)}{\partial t}$ en la 
+frontera, para esto planteamos el otro sistema definiendo 
+$u=\frac{\partial y}{\partial t}$ y derivamos entonces $\frac{\partial y''}{\partial t}=\frac{\partial f}{\partial t}$ utilizando la regla de la cadena
+ y sabiendo que $x$ no depende de $t$, adem\'as suponemos que el orden de 
+derivaci\'on de $x$ y $t$ puede cambiarse entonces la 
+ecuaci\'on (\ref{sistema}) derivada respecto a $t$ queda
+
+\begin{equation} 
+	u''=(6y^2-6)u \hspace{0.25cm} 1\leq x\leq 2 \hspace{0.25cm} u(a,t)=0 \hspace{0.25cm} u'(a,t)=1
+\label{sistemita}
+\end{equation}
+
+de esta manera para Newton debemos resolver dos problemas de valor inicial, el problema (\ref{sistema}) y (\ref{sistemita}) por lo tanto tenemos un 
+sistema de 4 ecuaciones de primer orden de la siguiente manera
+
+\begin{eqnarray} 
+	y'=z \\
+	z'=2y^3-6y-2x^3 \\
+	u'=p \\
+	p'=(6y^2-6)u
+\end{eqnarray}
+
+este sistema se resuelve usando el RungeKutta de orden 4 programado en el c\'odigo Disparo.cpp. Una vez resuelto el sistema tenemos $\frac{\partial 
+y}{\partial t}$ y tenemos $y(b,t)$ entonces hacemos Newton para obtener una aproximaci\'on de $t$ para la ecuaci\'on (\ref{newton}) de la siguiente 
+manera 
+\begin{equation}
+	t_{k+1}=t_k - \frac{y(b,t_k)-5/2}{u(b,t_k)}
+\end{equation}
+
+as\'i obtenemos un nuevo $t_{k+1}$ que nos sirve para un nuevo diparo m\'as aproximado. Iterando de esta manera aproximamos la soluci\'on. 
+
+\section{Resultados}
+El c\'odigo se ejecut\'o con 2 valores para $\delta x$ y dos valores para la tolerancia: ${0.02,0.01}$ y ${1.0e-6,1.0e-8}$ respectivamente. Se 
+compararon los resultados obtenidos num\'ericamente con los obtenidos por la funci\'on que representa la soluci\'on exacta y se grafic\'o la diferencia 
+de los dos valores respecto a las $x$ de la siguiente manera
+
+\begin{equation}
+	error(x)=|y_{num}(x)-y_{exc}(x)|
+\end{equation}
+arrojando lo siguiente
+
+\begin{figure}
+	\centering
+	\input{error_tol1e-06_h0.01.tex}
+	\caption{error con tolerancia $10^{-6}$ y $\delta x=0.01$}
+\end{figure}
+
+\begin{figure}
+	\centering
+	\input{error_tol1e-06_h0.02.tex}
+	\caption{error con tolerancia $10^{-6}$ y $\delta x=0.02$}
+\end{figure}	
+\begin{figure}
+	\centering
+	\input{error_tol1e-08_h0.01.tex}
+	\caption{error con tolerancia $10^{-8}$ y $\delta x=0.01$}
+\end{figure}	
+\begin{figure}
+	\centering
+	\input{error_tol1e-08_h0.02.tex}
+	\caption{error con tolerancia $10^{-8}$ y $\delta x=0.02$}
+\end{figure}	
+
+Para la soluci\'on num\'ericagraficaremos la de menor error que es 
+
+\begin{figure}
+	\input{solucion_tol1e-08_h0.01.tex}
+	\caption{solucion con la menor toleracnica y $\delta x$}
+\end{figure}
+
+\section{Conclusiones}
+En mi opini\'on la dificultad del m\'etodo corresponde a la implementaci\'on del RungeKutta. Mientras 
+mayor resoluci\'on la soluci\'on tendr\'a una mayor precisi\'on. Uno debe ser cuidadoso al escoger el $t$ 
+inicial, en este sistema utilizar $\frac{\beta - \alpha}{b - a}$ provoca que el m\'etodo de newton raphson 
+no tenga soluci\'on ya que crece mucho y en unas cuantas iteraciones con Newton la variable $t$ se vuelve 
+nan (not a number); observando la soluci\'on exacta podemos estimar una $t$ inicial cercana a cero pero no 
+siempre nos dar\'an la soluci\'on exacta entonces se gener\'o una iteraci\'on sobre el \'angulo inicial, 
+se escogi\'o un rango de $\pi /4$ y $-\pi /4$ en 10 \'angulos distintos, de esas iteraciones se nota que 
+si $t$ inicial es mayor que 0.02 el valor de $t$ no deja de crecer. La iteraci\'on sobre $t_{init}$ 
+permiti\'o encontrar un $t$ favorable para el m\'etodo de Newton.
+ 
+\begin{thebibliography}{9}
+\bibitem{tesis}
+Luis Jos\'e Berbes\'i� M\'arquez 
+	\emph{Soluci´on Num´erica de Problemas de Valor de Frontera
+para Ecuaciones Diferenciales Ordinarias}
+Universidad de Los Andes
+Facultad de Ciencias
+Departamento de Matem\'aticas
+Grupo de Ciencias de la Computaci\'on
+\end{thebibliography}
+
+\end{document}

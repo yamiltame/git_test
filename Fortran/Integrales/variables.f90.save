@@ -1,0 +1,7 @@
+module variables
+implicit none
+integer n
+real(8) a,b  !cotas de integracion
+real(8),allocatable :: D(:,:) 
+end module
+
